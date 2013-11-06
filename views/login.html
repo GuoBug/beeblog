@@ -12,19 +12,42 @@
     		<form method="POST" action="/login">
     		  <div class="form-group">
     		    <label>账户</label>
-    		    <input class="form-control" placeholder="Enter Account" name="uname">
+    		    <input id="uname" class="form-control" placeholder="Enter Account" name="uname">
     		  </div>
     		  <div class="form-group">
     		    <label>密码</label>
-    		    <input type="password" class="form-control" placeholder="Password" name="pwd">
+    		    <input id="pwd" type="password" class="form-control" placeholder="Password" name="pwd">
     		  </div>
     		  <div class="checkbox">
     		    <label>
     		      <input type="checkbox" name="autoLogin"> 自动登录
     		    </label>
     		  </div>
-    		  <button type="submit" class="btn btn-default">登录</button>
+    		  <button type="submit" class="btn btn-default" onclick="return checkInput();">登录</button>
+              <button type="submit" class="btn btn-default" onclick="return goBack();">返回</button>
     		</form>
+
+            <script type="text/javascript">
+                function checkInput(){
+                    var uname = document.getElementById("uname")
+                    if (uname.value.length == 0){
+                        alert("帐号不能为空");
+                        return false;
+                    }
+
+                    var pwd = document.getElementById("pwd")
+                    if (pwd.value.length == 0){
+                        alert("密码不能为空");
+                        return false;
+                    }
+                    return true;
+                }
+
+                function goBack(){
+                    window.location.href = "/";
+                    return false;
+                }
+            </script>
     	</div>
     </body>
 
