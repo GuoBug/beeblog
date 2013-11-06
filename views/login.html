@@ -1,0 +1,31 @@
+{{template "header"}}
+        <title>登录——Bug has no bug!</title>
+    </head>
+
+    <body>
+    	<div class="navbar navbar-default navbar-fixed-top" role="navigation">                
+    	    <div class="container">
+    	    {{template "navbar" .}}
+    	    </div>
+    	</div>
+    	<div class="container" style="width:500px">
+    		<form method="POST" action="/login">
+    		  <div class="form-group">
+    		    <label>账户</label>
+    		    <input class="form-control" placeholder="Enter Account" name="uname">
+    		  </div>
+    		  <div class="form-group">
+    		    <label>密码</label>
+    		    <input type="password" class="form-control" placeholder="Password" name="pwd">
+    		  </div>
+    		  <div class="checkbox">
+    		    <label>
+    		      <input type="checkbox" name="autoLogin"> 自动登录
+    		    </label>
+    		  </div>
+    		  <button type="submit" class="btn btn-default">登录</button>
+    		</form>
+    	</div>
+    </body>
+
+</html>
