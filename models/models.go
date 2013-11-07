@@ -1,10 +1,13 @@
 package models
 
 import (
+	"fmt"
 	"os"
 	"path"
+	"strconv"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -62,4 +65,60 @@ func IsDir(Dir string) bool {
 	}
 
 	return f.IsDir()
+}
+
+func AddCategory(name string) error {
+	/* 初始化 */
+	o := orm.NewOrm()
+
+	/* 这是上面的结构 */
+	cate := &Category{Title: name}
+
+	/* 查询数据 */
+	qs := o.QueryTable("category")
+	err := qs.Filter("title", name).One(cate)
+	fmt.Println("%s,%s  --- addcategory", err, name)
+
+	/* 查询成功,说明有数据 */
+
+	if err == nil {
+		beego.Error(err, name)
+		return err
+	}
+
+	_, err = o.Insert(cate)
+	fmt.Println("the err = [%s]", err)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DeleteCategory(id string) error {
+	cid, err := strconv.ParseInt(id, 10, 64)
+
+	if err != nil {
+		return err
+	}
+
+	o := orm.NewOrm()
+
+	cate := &Category{Id: cid}
+
+	_, err = o.Delete(cate)
+	return err
+
+}
+
+func GetAllCategories() ([]*Category, error) {
+	o := orm.NewOrm()
+
+	/* 初始化 能不能有其他方法 */
+	cates := make([]*Category, 0)
+	fmt.Println("ssssssssss")
+
+	qs := o.QueryTable("category")
+	_, err := qs.All(&cates)
+	return cates, err
 }
