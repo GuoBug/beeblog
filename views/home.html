@@ -9,13 +9,15 @@
             </div>
         </div>	
         <div class="container">
+            {{range .Topics}}
             <div class="page-header">
-                <h1>我的一篇博客</h1>
-                <h6 class="text-muted">文章发表于 2013 年 11 月 5 日 15 点 31 分</h6>
+                <h1>{{.Title}}</h1>
+                <h6 class="text-muted">文章发表于 {{.Created}}</h6>
                 <p>
-                	我的学习都是从抄袭开始，感谢 <a href="https://github.com/Unknwon">Unknwon</a>的入门教程
+                	{{.Content}}
                 </p>
             </div>
+            {{end}}
         </div>
 
         <script type="text/javascript" src="http://cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>

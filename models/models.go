@@ -111,14 +111,104 @@ func DeleteCategory(id string) error {
 
 }
 
+func DeleteTopic(id string) error {
+
+	tid, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	o := orm.NewOrm()
+
+	topic := &Topic{Id: tid}
+
+	_, err = o.Delete(topic)
+	return err
+}
+
+func AddTopic(title, content string) error {
+	o := orm.NewOrm()
+
+	topic := &Topic{
+		Title:   title,
+		Content: content,
+		Created: time.Now(),
+		Updated: time.Now(),
+	}
+
+	_, err := o.Insert(topic)
+	if err != nil {
+		beego.Error(err)
+	}
+	return err
+}
+
+func ModifyTopic(tid, title, content string) error {
+	o := orm.NewOrm()
+	id, err := strconv.ParseInt(tid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+		return err
+	}
+
+	topic := &Topic{Id: id}
+	beego.Debug(topic)
+
+	if o.Read(topic) == nil {
+		topic.Title = title
+		topic.Content = content
+		topic.Updated = time.Now()
+		o.Update(topic)
+	}
+
+	return err
+}
+
+func GetAllTopics(IsDesc bool) ([]*Topic, error) {
+	o := orm.NewOrm()
+
+	topics := make([]*Topic, 0)
+
+	qs := o.QueryTable("topic")
+
+	var err error
+
+	if IsDesc {
+		_, err = qs.OrderBy("created").All(&topics)
+	} else {
+		_, err = qs.All(&topics)
+	}
+	return topics, err
+}
+
 func GetAllCategories() ([]*Category, error) {
 	o := orm.NewOrm()
 
 	/* 初始化 能不能有其他方法 */
 	cates := make([]*Category, 0)
-	fmt.Println("ssssssssss")
 
 	qs := o.QueryTable("category")
 	_, err := qs.All(&cates)
 	return cates, err
+}
+
+func GetTopic(tid string) (*Topic, error) {
+	tidNum, err := strconv.ParseInt(tid, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	o := orm.NewOrm()
+	topic := new(Topic)
+
+	qs := o.QueryTable("topic")
+	err = qs.Filter("id", tidNum).One(topic)
+	if err != nil {
+		return nil, err
+	}
+
+	topic.Views++
+
+	_, err = o.Update(topic)
+	return topic, err
 }

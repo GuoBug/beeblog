@@ -11,6 +11,8 @@ type CategoryController struct {
 
 func (this *CategoryController) Get() {
 	this.Data["IsCategory"] = true
+
+	this.Data["IsLogin"] = checkAccount(this.Ctx)
 	this.TplNames = "category.html"
 
 	op := this.Input().Get("op")
