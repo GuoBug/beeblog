@@ -21,4 +21,11 @@ func (this *HomeController) Get() {
 	}
 	this.Data["Topics"] = topics
 
+	Category, err := models.GetAllCategories()
+	if err != nil {
+		beego.Error(err)
+	}
+
+	this.Data["Categories"] = Category
+
 }
