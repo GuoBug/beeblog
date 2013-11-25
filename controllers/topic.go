@@ -27,14 +27,23 @@ func (this *TopicController) Post() {
 	}
 	/* 解析表单 */
 	title := this.Input().Get("title")
+	category := this.Input().Get("category")
 	content := this.Input().Get("content")
 	tid := this.Input().Get("tid")
 
 	var err error
-	if len(tid) == 0 {
-		err = models.AddTopic(title, content)
+
+	if models.CheckCategory(category) {
+		beego.Debug("had")
 	} else {
-		err = models.ModifyTopic(tid, title, content)
+		beego.Debug("Not ! ")
+		models.AddCategory(category)
+	}
+
+	if len(tid) == 0 {
+		err = models.AddTopic(title, content, category)
+	} else {
+		err = models.ModifyTopic(tid, title, content, category)
 	}
 	if err != nil {
 		beego.Error(err)

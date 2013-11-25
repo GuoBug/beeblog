@@ -31,6 +31,7 @@ type Topic struct {
 	Id           int64
 	Uid          int64
 	Title        string
+	Category     string
 	Content      string `orm:"size(300)"`
 	Attachment   string
 	Created      time.Time `orm:"index"`
@@ -126,14 +127,15 @@ func DeleteTopic(id string) error {
 	return err
 }
 
-func AddTopic(title, content string) error {
+func AddTopic(title, content, category string) error {
 	o := orm.NewOrm()
 
 	topic := &Topic{
-		Title:   title,
-		Content: content,
-		Created: time.Now(),
-		Updated: time.Now(),
+		Title:    title,
+		Category: category,
+		Content:  content,
+		Created:  time.Now(),
+		Updated:  time.Now(),
 	}
 
 	_, err := o.Insert(topic)
@@ -143,7 +145,7 @@ func AddTopic(title, content string) error {
 	return err
 }
 
-func ModifyTopic(tid, title, content string) error {
+func ModifyTopic(tid, title, content, category string) error {
 	o := orm.NewOrm()
 	id, err := strconv.ParseInt(tid, 10, 64)
 	if err != nil {
@@ -156,6 +158,7 @@ func ModifyTopic(tid, title, content string) error {
 
 	if o.Read(topic) == nil {
 		topic.Title = title
+		topic.Category = category
 		topic.Content = content
 		topic.Updated = time.Now()
 		o.Update(topic)
@@ -211,4 +214,19 @@ func GetTopic(tid string) (*Topic, error) {
 
 	_, err = o.Update(topic)
 	return topic, err
+}
+
+/* 检查是否分类存在 */
+
+func CheckCategory(title string) bool {
+	AllCategories, err := GetAllCategories()
+	if err != nil {
+		beego.Error(err)
+	}
+	for _, category := range AllCategories {
+		if category.Title == title {
+			return true
+		}
+	}
+	return false
 }
