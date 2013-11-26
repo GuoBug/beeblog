@@ -96,6 +96,24 @@ func AddCategory(name string) error {
 	return nil
 }
 
+func UpdateCategory(name string) error {
+	o := orm.NewOrm()
+
+	category := new(Category)
+
+	qs := o.QueryTable(category)
+	err := qs.Filter("title", name).One(category)
+	if err != nil {
+		return err
+	}
+
+	category.TopicCount++
+
+	_, err = o.Update(category)
+	return err
+
+}
+
 func DeleteCategory(id string) error {
 	cid, err := strconv.ParseInt(id, 10, 64)
 

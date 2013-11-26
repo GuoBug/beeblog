@@ -33,17 +33,23 @@ func (this *TopicController) Post() {
 
 	var err error
 
-	if models.CheckCategory(category) {
-		beego.Debug("had")
-	} else {
-		beego.Debug("Not ! ")
-		models.AddCategory(category)
-	}
-
 	if len(tid) == 0 {
 		err = models.AddTopic(title, content, category)
+		if models.CheckCategory(category) {
+			beego.Debug("had")
+			models.UpdateCategory(category)
+		} else {
+			beego.Debug("Not ! ")
+			models.AddCategory(category)
+		}
 	} else {
 		err = models.ModifyTopic(tid, title, content, category)
+		if models.CheckCategory(category) {
+			beego.Debug("had")
+		} else {
+			beego.Debug("Not ! ")
+			models.AddCategory(category)
+		}
 	}
 	if err != nil {
 		beego.Error(err)
